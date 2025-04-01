@@ -7,7 +7,11 @@ test.beforeEach(async({ page }) => {
 
 test('Successful search', async({ page }) => {
     const search = new Search(page);
-    
-    await search.successfulSearch();
+
+    // Given: a user is on the search bar
+    // When: the user searches for an item
+    await search.searchForAnItem();
+
+    // Then: the search results should be displayed correctly
     await search.assertSearchIsSuccessful(); 
  });

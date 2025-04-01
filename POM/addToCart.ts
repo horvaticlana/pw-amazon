@@ -1,62 +1,21 @@
 import { expect, Locator, Page } from "@playwright/test";
 
 export class AddToCart {
-    readonly page : Page;
-    addToCartBtn : Locator;
-    increaseBtn : Locator;
-    decreaseBtn : Locator;
-    itemsInCart : Locator;
-    subtotal : Locator;
+    readonly page: Page;
+    addToCartButton: Locator;
+    itemsInCart: Locator;
 
-    constructor(page: Page){
+    constructor(page: Page) {
         this.page = page;
-        this.addToCartBtn = page.locator('#a-autoid-1-announce');
-        this.increaseBtn = page.getByRole('button', { name: 'Increase quantity by one' });
-        this.decreaseBtn = page.getByRole('button', { name: 'Decrease quantity by one' });
-        this.itemsInCart = page.getByRole('link', { name: 'items in cart' });
-        this.subtotal = page.getByRole('heading', { name: 'Subtotal' });
+        this.addToCartButton = page.locator('#a-autoid-1-announce'); 
+        this.itemsInCart = page.locator('#nav-cart-count'); 
     }
 
-    // add item to cart
     async addProductToCart() {
-        await this.addToCartBtn.click();
+        await this.addToCartButton.click();
     }
 
-    async assertOneProductIsAdded(){
-        await expect(this.itemsInCart).toHaveCount(1);
+    async assertOneProductIsAdded(expectedCount: number) {
+        await expect(this.itemsInCart).toHaveText(expectedCount.toString());
     }
-
-    // increase product quantity by one
-        // UI is not giving the increaseBtn for some reason, had to use the addToCartBtn
-    async increaseQuantity() {
-        await this.addToCartBtn.click();
-    }
-
-    async assertQuantityIsIncreased(){
-        const initialCount = await this.itemsInCart.count();
-        await this.increaseQuantity();
-        await expect(this.itemsInCart).toHaveCount(initialCount + 1);
-    }
-
-    // decrease product quantity by one
-    async decreaseQuantity() {
-        await this.decreaseBtn.click();
-    }
-
-    async assertQuantityIsDecreased(){
-        const initialCount = await this.itemsInCart.count();
-        await this.decreaseQuantity();
-        await expect(this.itemsInCart).toHaveCount(initialCount - 1);
-    }
-
-    //get subtotal
-    async getSubtotal() {
-        await this.addProductToCart();
-        await this.subtotal.textContent();
-    }
-
-    async assertSubtotalExists(){
-        await expect(this.subtotal).toBeVisible();
-    }
-
-} 
+}
